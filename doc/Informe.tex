@@ -1,0 +1,163 @@
+\documentclass[12pt]{article}
+
+%===================================================================================
+% Paquetes
+%----------------------------------------------------------
+\usepackage{textcomp}
+\usepackage[x11names,table]{color}
+% \topmargin=-2cm
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{latexsym}
+\usepackage{graphicx}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+\usepackage{listings} \lstset {language = Python, basicstyle=\bfseries\ttfamily, keywordstyle = \color{blue}, commentstyle = \bf\color{gray}}
+\usepackage{hyperref}
+
+% \textheight=20cm
+% \textwidth=18cm
+% \oddsidemargin=-1cm
+
+\usepackage{xcolor}
+% \textheight=27cm
+
+% opening
+\title{Proyecto de Simulaci\'on}
+\author{Mauricio L. Perdomo Cort\'es. C-412}
+% 
+% 
+\begin{document}
+\vspace{8.cm}
+
+\maketitle
+
+\begin{center}
+    Facultad de Matem\'atica y Computaci\'on\\\vspace{0.2cm} Universidad de La Habana
+\end{center}
+
+\clearpage
+
+% \tableofcontents
+\newpage
+
+\section{Orden del Problema}
+% \centering
+\textsc{\textbf{Agentes:}}
+
+La orden de nuestro trabajo se encuentra en un pdf que acompa\~na a este en el repositorio de GitHub.
+
+\section{Principales Ideas seguidas para la soluci\'on del problema.}
+En el proyecto modelaremos el ambiente mediante la clase Environment, esta representar\'a el estado actual del ambiente, guiar\'a la simulaci\'on y reunir\'a distintas estad\'isticas.
+En el ambiente podremos encontrar distintos tipos de elementos entre los que se encuentran Ni\~nos, Obst\'aculos, Suciedad, Corrales y Agentes (Roboces de limpieza). Cada uno de estos elementos
+est\'a modelado mediante una clase que podemos encontrar en el paquete env. En cada turno nuestro ambiente le indica al robot que realice una acci\'on, luego mueve a los ni\~nos y genera suciedad y por 
+\'ultimo en caso de ser requerido aplica un cambio aleatorio del ambiente, esto consiste en tomar todos los elementos del ambiente y ubicarlos un una posici\'on aleatoria del ambiente. Luego de haber ejecutado todas
+las acciones del turno, se comprueba si se cumple la condici\'on de parada del ambiente y en consecuencia del resultado se procede al siguiente turno o se termina la simulaci\'on (La condici\'on de parada tambi\'en es chequeada
+despu\'es de la acci\'on del agente para evitar que el robot termine de limpiar todo y sea el momento de aplicar la variaci\'on aleatoria lo que no resultar\'ia en la terminaci\'on de la simulaci\'on). 
+\section{Modelos de Agentes:}
+En el proyecto contamos con la implementaci\'on de dos agentes distintos uno implementado siguiendo un patr\'on reactivo, buscando acercarnos a la Arquitectura de Brooks, y otro que busca un enfoque m\'as proactivo
+planeando recorridos para cumplir su objetivo.
+\begin{itemize}
+	\item El primer agente sigue un enfoque totalmente reactivo, basa su pr\'oxima acci\'on en los datos obtenidos del ambiente actual y no tiene en cuenta para nada acciones pasadas o posibilidades futuras.
+	El agente contiene una lista de reglas las cuales est\'an conformadas por una condici\'on y una acci\'on. Estas reglas estan ordenadas y cada vez que el agente de realizar un acci\'on va de una en una por estas reglas
+	hasta encontrar la primera que cumpla la condici\'on teniendo en cuenta el estado actual del ambiente, la acci\'on asociada a esta regla es la seleccionada por el ambiente. En el caso de que no se cumpla ninguna condici\'on el 
+	agente decidir\'a no hacer nada. 
+
+	\item El segundo agente sigue un enfoque m\'as proactivo planeando una estrategia para lograr su objetivo. Este agente tiene como fin dejar a todos los ni\~nos en el corral y limpiar toda la casa, para esto tiene dos objetivos fundamentales
+	que cumplir, poner a los ni\~nos en el corral y limpiar la casa. Cada determinado tiempo indicado por un par\'ametro o cuando se cumple determinada condici\'on el agente planea nuevamente su estrategia, al planear decide si se concentrar\'a en 
+	limpiar la suciedad o en llevar ni\~nos al corral, en caso de que decida llevar ni\~nos al corral crear\'a una lista ordenada para decidir a que ni\~no trasladar\'a en cada momento. Como vemos este proceso para decidir qu\'e hacer plantea objetivos que no pueden 
+	ser transformados directamente a acciones del tipo tral\'adate a la derecha, suelta a un ni\~no, etc; para decidir la acci\'on como tal a realizar por el agente usaremos el mismo m\'etodo que con el agente anterior, entonces segun el objetivo que tengamos
+	se construir\'a un lista de reglas que se ejecutar\'an como mismo explicamos con el agente anterior.
+	
+\end{itemize}
+
+\section{Ideas seguidas para la implementaci\'on:}
+\subsection{Ambiente}
+El ambiente es modelado mediante la clase Environment, esta se encarga dado los par\'ametros de inicio de crear el ambiente 
+inicial colocando los elementos en el ambiente, cada elemento est\'a modelado a su vez por una clase que contiene la informaci\'on e interacciones
+del elemento. La ejecuci\'on de una corrida ocurre mediante el m\'etodo run del ambiente el cual comezar\'a a ejecutar las acciones necesarias hasta que se cumpla
+la condici\'on de parada.
+\subsection{Agentes}
+Los agentes fueron implementados mediante clases que heredan de la clase Agent que representa la interfaz mediante la cual el ambiente interact\'ua con los
+agentes. El m\'etodo m\'as importante de estas clases es el m\'etodo action que es el que le indica al agente que realice una acci\'on. En el caso de BrooksA el m\'etodo action toma 
+la percepci\'on del ambiente y comprueba que regla se cumple para realizar la acci\'on; en el caso de ProactiveAgent toma una percepci\'on y primero el agente decide si debe planear o no, y luego de esto decide
+que acci\'on realizar en base a la percepci\'on y a los objetivos determinados en la fase estrat\'egica.
+
+\section{Resultados de las simulaciones:}
+Se tomaron 10 ambientes distintos y se realizaron 60 simulaciones en cada uno (30 por cada agente). De cada par agente ambiente se cont\'o la cantidad de veces
+que el agente fue despedido, la cantidad de veces que logr\'o limpiar completamente la casa y que porcentaje del ambiente representaba la media de casilla sucias en una corrida.
+Podemos observar los datos obtenidos en las siguientes tablas.
+\begin{table}[h]
+	\small
+	\begin{center}
+		\begin{tabular} {| l | l  | l | l | l | l | l | l | l |}
+			\hline
+			Fil. & Col.& T & \% de Obs. & \% de Suc. & Ni\~nos & Despedido & Completado & \% Suc.\\ 
+			\hline
+			9 & 6 & 74 & 25 & 35 & 4 & 0 & 6 & 32.04 \\
+			\hline
+			5 & 9 & 68 & 42 & 13 & 3 & 1 & 27 & 24.46 \\
+			\hline
+			8 & 10 & 118 & 16 & 16 & 4 & 0 & 22 & 20.52 \\ 
+			\hline
+			7 & 5 & 33 & 50 & 31 & 3 & 0 & 11 & 29.54 \\ 
+			\hline 
+			10 & 5 & 22 & 7 & 36 & 3 & 0 & 0 & 31.38 \\ 
+			\hline
+			6 & 8 & 81 & 7 & 39 & 4 & 0 & 6 & 30.08 \\ 
+			\hline
+			5 & 6 & 48 & 29 & 11 & 4 & 4 & 24 & 23.81 \\
+			\hline
+			5 & 7 & 60 & 29 & 17 & 4 & 2 & 27 & 25.22 \\ 
+			\hline
+			6 & 9 & 96 & 22 & 10 & 2 & 0 & 28 & 14.84 \\ 
+			\hline
+			5 & 5 & 100 & 0 & 0 & 4 & 0 & 30 & 14.71 \\ 
+			\hline
+	 	\end{tabular}
+		\caption{BrooksA}
+	\end{center}	
+\end{table}
+\begin{table}
+	\small
+	\begin{center}
+		\begin{tabular} {| l | l  | l | l | l | l | l | l | l |}
+			\hline
+			Fil. & Col.& T & \% de Obs. & \% de Suc. & Ni\~nos & Despedido & Completado & \% Suc.\\ 
+			\hline
+			9 & 6 & 74 & 25 & 35 & 4 & 0 & 0 & 37.22 \\
+			\hline
+			5 & 9 & 68 & 42 & 13 & 3 & 10 & 20 & 28.59 \\
+			\hline
+			8 & 10 & 118 & 16 & 16 & 4 & 18 & 12 & 30.07 \\ 
+			\hline
+			7 & 5 & 33 & 50 & 31 & 3 & 0 & 1 & 40.19 \\ 
+			\hline 
+			10 & 5 & 22 & 7 & 36 & 3 & 0 & 0 & 37.97 \\ 
+			\hline
+			6 & 8 & 81 & 7 & 39 & 4 & 0 & 0 & 34.13 \\ 
+			\hline
+			5 & 6 & 48 & 29 & 11 & 4 & 24 & 6 & 34.43 \\
+			\hline
+			5 & 7 & 60 & 29 & 17 & 4 & 28 & 2 & 36.73 \\ 
+			\hline
+			6 & 9 & 96 & 22 & 10 & 2 & 0 & 29 & 15.53 \\ 
+			\hline
+			5 & 5 & 100 & 0 & 0 & 4 & 2 & 28 & 19.35 \\ 
+			\hline
+	 	\end{tabular}
+		\caption{ProactiveAgent}
+	\end{center}	
+\end{table}
+\newline
+\newline
+\newline
+\newline
+Luego de observar los datos se llega a la conclusi\'on de que el agente totalmente reactivo es mucho m\'as efectivo en este escenario,
+lo cual era esperado dado el alto grado de variabilidad que tiene el ambiente teniendo en cuenta que los ni\~nos se encuentran en movimiento y 
+que cada cierta cantidad de turnos el ambiente cambia completamente.
+
+\section{GitHub link al c\'odigo del proyecto}
+\href{https://github.com/stdevMauricio1802/Simulation}{C\'odigo Fuente}
+\end{document}
