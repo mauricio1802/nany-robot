@@ -60,8 +60,8 @@ En el proyecto contamos con la implementaci\'on de dos agentes distintos uno imp
 planeando recorridos para cumplir su objetivo.
 \begin{itemize}
 	\item El primer agente sigue un enfoque totalmente reactivo, basa su pr\'oxima acci\'on en los datos obtenidos del ambiente actual y no tiene en cuenta para nada acciones pasadas o posibilidades futuras.
-	El agente contiene una lista de reglas las cuales est\'an conformadas por una condici\'on y una acci\'on. Estas reglas estan ordenadas y cada vez que el agente de realizar un acci\'on va de una en una por estas reglas
-	hasta encontrar la primera que cumpla la condici\'on teniendo en cuenta el estado actual del ambiente, la acci\'on asociada a esta regla es la seleccionada por el ambiente. En el caso de que no se cumpla ninguna condici\'on el 
+	El agente contiene una lista de reglas las cuales est\'an conformadas por una condici\'on y una acci\'on. Estas reglas estan ordenadas y cada vez que el agente debe realizar un acci\'on va de una en una por estas reglas
+	hasta encontrar la primera que cumpla la condici\'on teniendo en cuenta el estado actual del ambiente, la acci\'on asociada a esta regla es la seleccionada por el agente. En el caso de que no se cumpla ninguna condici\'on el 
 	agente decidir\'a no hacer nada. 
 
 	\item El segundo agente sigue un enfoque m\'as proactivo planeando una estrategia para lograr su objetivo. Este agente tiene como fin dejar a todos los ni\~nos en el corral y limpiar toda la casa, para esto tiene dos objetivos fundamentales
@@ -74,7 +74,7 @@ planeando recorridos para cumplir su objetivo.
 
 \section{Ideas seguidas para la implementaci\'on:}
 \subsection{Ambiente}
-El ambiente es modelado mediante la clase Environment, esta se encarga dado los par\'ametros de inicio de crear el ambiente 
+El ambiente es modelado mediante la clase Environment, esta se encarga dados los par\'ametros de inicio de crear el ambiente 
 inicial colocando los elementos en el ambiente, cada elemento est\'a modelado a su vez por una clase que contiene la informaci\'on e interacciones
 del elemento. La ejecuci\'on de una corrida ocurre mediante el m\'etodo run del ambiente el cual comezar\'a a ejecutar las acciones necesarias hasta que se cumpla
 la condici\'on de parada.
